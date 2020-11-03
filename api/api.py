@@ -2,31 +2,39 @@ import time
 from flask import Flask
 import sqlite3
 import uuid
-
-
+from werkzeug.exceptions import HTTPException
+import json
 
 app = Flask(__name__)
-
-@app.route('/importMovieData')
-def import_csv():
-    importMovieData.importMovie()
-
-@app.route('/time')
-def get_current_time():
-    return {'time': time.time()}
 
 @app.route('/initdb')
 def init_db():
     conn = sqlite3.connect('movies.db')
     print("Opened database successfully");
 
-    conn.execute('CREATE TABLE movies (name TEXT, addr TEXT, city TEXT, pin TEXT)')
+    conn.execute(
+        'CREATE TABLE movies (' +
+            'release_year TEXT, ' +
+            'title TEXT, ' +
+            'origin TEXT, ' +
+            'director TEXT' +
+            'cast TEXT' +
+            'genre TEXT' +
+            'wiki_page TEXT' +
+            'plot TEXT' +
+        ')'
+    )
     print("Table created successfully");
     conn.close()
+    return {}
 
 @app.route('/populatedb')
-def populatedb():
-    pass
+def populate_db():
+    try:
+        pass
+    except Exception as e:
+        return 
+    return "db has been populated"
 
 @app.route('/movies', defaults={'movie_id': None}, methods=['GET'])
 @app.route('/movies/<movie_id>')
@@ -44,4 +52,14 @@ def create_movie():
 def update_movie(movie_id):
     return "updating data for movie with id: " + str(movie_id)
 
-
+@app.errorhandler(HTTPException)
+def handle_bad_request(e):
+    response = e.get_response()
+    # replace the body with JSON
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
