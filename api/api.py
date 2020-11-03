@@ -36,6 +36,7 @@ def init_db():
     conn.close()
     return 'database initialized'
 
+# TODO: Allow specification of file location
 @app.route('/populatedb')
 def populate_db():
     try:
