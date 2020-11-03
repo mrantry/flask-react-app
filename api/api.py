@@ -50,10 +50,6 @@ def populate_db():
         movies_with_ids = [[str(uuid.uuid1())] + row for row in rows]
 
         print(movies_with_ids[0])
-
-
-        # ignore the header
-        next(rows, None)
     
         cur.executemany("INSERT INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", movies_with_ids[1:len(movies_with_ids)])
 
