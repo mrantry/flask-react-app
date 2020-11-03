@@ -65,7 +65,7 @@ def populate_db():
     except Exception as e:
         return f'an exception has occured in populating the database: {e}', 500
     
-
+# TODO: DRY...
 @app.route('/movies', defaults={'movie_id': None}, methods=['GET'])
 @app.route('/movies/<movie_id>')
 def get_movie_by_id(movie_id):
