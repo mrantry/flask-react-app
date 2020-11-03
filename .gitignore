@@ -24,3 +24,7 @@ yarn-error.log*
 
 venv
 __pycache__
+
+movies.db
+movie_plots.csv
+settings.json
