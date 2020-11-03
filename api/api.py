@@ -1,4 +1,3 @@
-import time
 from flask import Flask
 import sqlite3
 import uuid
@@ -34,7 +33,7 @@ def init_db():
 
 
     conn.close()
-    return 'database initialized'
+    return 'database initialized', 200
 
 # TODO: Allow specification of file location
 @app.route('/populatedb')
@@ -57,7 +56,7 @@ def populate_db():
         con.commit()
         con.close()
 
-        return "db has been populated from csv: "
+        return "db has been populated from csv", 200
 
     except Exception as e:
         return f'an exception has occured in populating the database: {e}', 500
