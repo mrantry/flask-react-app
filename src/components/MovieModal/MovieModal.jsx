@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Modal } from 'semantic-ui-react'
 
 export default function MovieModal (props) {
-    const {movieId} = props
+    const {movieId, modalOpen, handleModalClose} = props
     const [movie, setMovie] = useState()
 
     useEffect(() => {
@@ -15,7 +15,8 @@ export default function MovieModal (props) {
     
     return (
         <Modal
-            open={true}
+            open={modalOpen}
+            onClose={handleModalClose}
         >
             <Modal.Header>{movie ? movie.title : "LOADING"}</Modal.Header>
             <Modal.Content>
