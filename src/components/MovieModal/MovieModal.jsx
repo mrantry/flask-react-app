@@ -128,11 +128,16 @@ export default function MovieModal(props) {
         {!editing ? (
           <div>
             <Button onClick={() => setEditing(true)}>Edit</Button>
+            <Button primary onClick={() => handleModalClose()}>
+              Done
+            </Button>
           </div>
         ) : (
           <div>
             <Button onClick={() => setEditing(false)}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
+            <Button positive onClick={handleSave}>
+              Save
+            </Button>
           </div>
         )}
       </Modal.Actions>
