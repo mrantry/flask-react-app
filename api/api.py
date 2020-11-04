@@ -130,11 +130,81 @@ def get_movie_by_id(movie_id):
         
 @app.route('/movies', methods=['POST'])
 def create_movie():
-    return "creating movie with id: " + str(uuid.uuid1())
+
+    body = request.get_json()
+
+    try:
+        con = sqlite3.connect("movies.db")
+        cur = con.cursor()
+
+        movie_id = str(uuid.uuid1())
+
+        new_movie = [
+            movie_id, 
+            body["releaseYear"],
+            body["title"],
+            body["origin"],
+            body["director"],
+            body["cast"],
+            body["genre"],
+            body["wiki"],
+            body["plot"]
+        ]
+        cur.execute("INSERT INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", new_movie)
+
+        con.commit()
+        con.close()
+
+        return {"id": movie_id}, 200
+    except Exception as e:
+        return f'error creating movie: {e}'
+
+
 
 @app.route('/movies/<movie_id>', methods=['PUT'])
 def update_movie(movie_id):
-    return "updating data for movie with id: " + str(movie_id)
+    body = request.get_json()
+
+    try:
+        con = sqlite3.connect("movies.db")
+        cur = con.cursor()
+
+
+        new_movie = [
+            body["releaseYear"],
+            body["title"],
+            body["origin"],
+            body["director"],
+            body["cast"],
+            body["genre"],
+            body["wiki"],
+            body["plot"],
+            movie_id
+        ]
+
+        print(new_movie)
+
+        sql = """
+        UPDATE movies
+        SET release_year = ? ,
+            title = ? ,
+            origin = ? ,
+            director = ? ,
+            cast = ? ,
+            genre = ? ,
+            wiki_page = ? ,
+            plot = ?
+        WHERE id = ?"""
+
+        cur.execute(sql, new_movie)
+
+        con.commit()
+        con.close()
+
+        return {"id": movie_id}, 200
+    except Exception as e:
+        return f'error creating movie: {e}'
+
 
 @app.errorhandler(HTTPException)
 def handle_bad_request(e):
