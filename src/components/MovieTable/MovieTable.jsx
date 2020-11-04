@@ -4,8 +4,11 @@ import {
   Table,
   Visibility,
   Button,
-  Search,
+  Input,
   Card,
+  Loader,
+  Dimmer,
+  Segment,
 } from "semantic-ui-react";
 import MovieModal from "../MovieModal/MovieModal";
 
@@ -15,7 +18,7 @@ export default function MovieTable() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState();
   const [page, setPage] = useState(1);
-
+  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [newMovie, setNewMovie] = useState(false);
@@ -73,6 +76,25 @@ export default function MovieTable() {
     setMovies(filtered);
   };
 
+  const handleSearchChange = (e) => {
+    setLoading(true);
+    if (e.target.value === "") {
+      fetch("/movies?page=1")
+        .then((res) => res.json())
+        .then((data) => {
+          setMovies(data.content);
+          setLoading(false);
+        });
+    } else {
+      fetch(`/search/${e.target.value}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setMovies(data.content);
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <div>
       <MovieModal
@@ -105,22 +127,23 @@ export default function MovieTable() {
         <Button onClick={handleAddMovie} positive>
           Add Movie
         </Button>
-        <Search placeholder="search by title..." />
+        <Loader active={loading} inline />
+        <Input placeholder="search by title..." onChange={handleSearchChange} />
       </Header>
+      {/* <Card style={{ margin: "0 20px 100px 20px", width: "99%" }}> */}
       <Visibility onBottomVisible={handleInfiniteScroll} once={false}>
-        <Card style={{ margin: "0 20px 100px 20px", width: "99%" }}>
-          <Table celled>
-            <Table.Header>
-              <Table.HeaderCell>Title</Table.HeaderCell>
-              <Table.HeaderCell>Genre</Table.HeaderCell>
-              <Table.HeaderCell>Release Year</Table.HeaderCell>
-              <Table.HeaderCell>Director</Table.HeaderCell>
-              <Table.HeaderCell>Origin</Table.HeaderCell>
-            </Table.Header>
-            <Table.Body>{movies.map((m, i) => moviecard(m, i))}</Table.Body>
-          </Table>
-        </Card>
+        <Table style={{ margin: "0 20px 100px 20px", width: "98.5%" }} celled>
+          <Table.Header>
+            <Table.HeaderCell>Title</Table.HeaderCell>
+            <Table.HeaderCell>Genre</Table.HeaderCell>
+            <Table.HeaderCell>Release Year</Table.HeaderCell>
+            <Table.HeaderCell>Director</Table.HeaderCell>
+            <Table.HeaderCell>Origin</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>{movies.map((m, i) => moviecard(m, i))}</Table.Body>
+        </Table>
       </Visibility>
+      {/* </Card> */}
     </div>
   );
 }

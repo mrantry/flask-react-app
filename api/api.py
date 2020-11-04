@@ -270,10 +270,8 @@ def search(search_string):
         con = sqlite3.connect("movies.db")
         cur = con.cursor()
 
-        pagenumber = request.args.get('page')
+        cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies WHERE title LIKE \'{search_string}%\' ORDER BY title;')
 
-        cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies WHERE title LIKE \'{search_string}%\' ORDER BY id LIMIT 50 OFFSET {str((int(pagenumber)-1)*50)};')
-        
         data = cur.fetchall()
 
         con.commit()
@@ -292,11 +290,11 @@ def search(search_string):
                }
             )
 
-        return {'content': formatted, "page": pagenumber}
+        return {'content': formatted}
 
 
     except Exception as e:
-        return f'error creating movie: {e}'
+        return f'error searching for movie: {e}'
 
 @app.errorhandler(HTTPException)
 def handle_bad_request(e):
