@@ -9,6 +9,7 @@ export default function MovieModal(props) {
     newMovie,
     handleMovieDelete,
     setNewMovie,
+    fetchMovies,
   } = props;
 
   const [editing, setEditing] = useState(false);
@@ -107,6 +108,8 @@ export default function MovieModal(props) {
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
           setNewMovie(false);
+
+          fetchMovies();
         });
     } else {
       fetch(`/movies/${movieId}`, {
@@ -125,10 +128,11 @@ export default function MovieModal(props) {
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
           setReleaseYear(movie_data.release_year);
+
+          fetchMovies();
         });
     }
     setEditing(false);
-    // send service call here
   };
 
   const handleCancel = () => {

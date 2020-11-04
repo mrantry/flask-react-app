@@ -272,7 +272,9 @@ def search(search_string):
         con = sqlite3.connect("movies.db")
         cur = con.cursor()
 
-        cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies WHERE title LIKE \'{search_string}%\' ORDER BY title;')
+        pagenumber = request.args.get('page')
+
+        cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies WHERE title LIKE \'{search_string}%\' ORDER BY title LIMIT 50 OFFSET {str((int(pagenumber)-1)*50)};')
 
         data = cur.fetchall()
 
