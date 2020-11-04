@@ -195,11 +195,31 @@ def update_movie(movie_id):
         WHERE id = ?"""
 
         cur.execute(sql, new_movie)
-
+        cur.execute(f'SELECT * FROM movies where ID=\'{movie_id}\'')
+        data = cur.fetchall()
+        
         con.commit()
         con.close()
 
-        return {"id": movie_id}, 200
+        formatted = []
+        for item in data:
+            formatted.append(
+                {
+                    "id": item[0],
+                    "release_year": item[1],
+                    "title": item[2],
+                    "origin": item[3],
+                    "director": item[4],
+                    "cast": item[5],
+                    "genre": item[6],
+                    "wiki": item[7],
+                    "plot": item[8],
+
+               }
+            )
+
+        return {'content': formatted}, 200
+        
     except Exception as e:
         return f'error creating movie: {e}'
 

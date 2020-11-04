@@ -3,7 +3,6 @@ import { Button, Form, Label, Modal } from "semantic-ui-react";
 
 export default function MovieModal(props) {
   const { movieId, modalOpen, handleModalClose, newMovie } = props;
-  const [movie, setMovie] = useState();
 
   const [editing, setEditing] = useState(false);
 
@@ -28,12 +27,11 @@ export default function MovieModal(props) {
           setCast(movie_data.cast);
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
-          setMovie(movie_data);
         });
     }
   }, [movieId]);
 
-  const handleTileChange = (e) => {
+  const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
   const handlePlotChange = (e) => {
@@ -56,24 +54,57 @@ export default function MovieModal(props) {
   };
 
   const handleSave = () => {
+    const movieDataToBeSent = {
+      title,
+      plot,
+      genre,
+      director,
+      origin,
+      cast,
+      wiki: wikiUrl,
+    };
+    if (newMovie) {
+      console.log("sent request to create a movie");
+    } else {
+      fetch(`/movies/${movieId}`, { method: "PUT", body: movieDataToBeSent })
+        .then((res) => res.json())
+        .then((data) => {
+          const movie_data = data.content[0];
+          setTitle(movie_data.title);
+          setPlot(movie_data.plot);
+          setDirector(movie_data.director);
+          setGenre(movie_data.genre);
+          setCast(movie_data.cast);
+          setOrigin(movie_data.origin);
+          setWikiUrl(movie_data.wiki);
+        });
+    }
     setEditing(false);
     // send service call here
+  };
+
+  const handleCancel = () => {
+    if (newMovie) {
+      handleModalClose();
+    } else {
+      setEditing(false);
+    }
   };
 
   const display = () => {
     return (
       <div>
         <strong>Plot</strong>
-        <p>{movie ? movie.plot : "LOADING"}</p>
+        <p>{plot ? plot : "NO DATA"}</p>
         <strong>Director</strong>
-        <p>{movie ? movie.director : "LOADING"}</p>
+        <p>{director ? director : "NO DATA"}</p>
         <strong>Genre</strong>
-        <p>{movie ? movie.genre : "LOADING"}</p>
+        <p>{genre ? genre : "NO DATA"}</p>
         <strong>Cast</strong>
-        <p>{movie ? movie.cast : "LOADING"}</p>
+        <p>{cast ? cast : "NO DATA"}</p>
         <strong>Origin</strong>
-        <p>{movie ? movie.origin : "LOADING"}</p>
-        <a href={movie ? movie.wiki : "LOADING"}>
+        <p>{origin ? origin : "NO DATA"}</p>
+        <a href={wikiUrl ? wikiUrl : "NO DATA"}>
           Learn More by visiting the Wikipedia Page
         </a>
       </div>
@@ -84,26 +115,38 @@ export default function MovieModal(props) {
     return (
       <div>
         <Form>
-          <Form.Input value={title} label="Title" />
-          <Form.TextArea value={plot} label="Plot" />
-          <Form.Input value={director} label="Director" />
-          <Form.Input value={genre} label="Genre" />
-          <Form.Input value={cast} label="Cast" />
-          <Form.Input value={origin} label="Origin" />
-          <Form.Input value={wikiUrl} label="Wiki URL" />
+          <Form.Input
+            value={title}
+            onChange={handleTitleChange}
+            label="Title"
+          />
+          <Form.TextArea
+            value={plot}
+            onChange={handlePlotChange}
+            label="Plot"
+          />
+          <Form.Input
+            value={director}
+            onChange={handleDirectorChange}
+            label="Director"
+          />
+          <Form.Input
+            value={genre}
+            onChange={handleDirectorChange}
+            label="Genre"
+          />
+          <Form.Input value={cast} onChange={handleCastChange} label="Cast" />
+          <Form.Input
+            value={origin}
+            onChange={handleOriginChange}
+            label="Origin"
+          />
+          <Form.Input
+            value={wikiUrl}
+            onChange={handleWikiUrlChange}
+            label="Wiki URL"
+          />
         </Form>
-        {/* <p>{movie ? movie.plot : "LOADING"}</p>
-        <strong>Director</strong>
-        <p>{movie ? movie.director : "LOADING"}</p>
-        <strong>Genre</strong>
-        <p>{movie ? movie.genre : "LOADING"}</p>
-        <strong>Cast</strong>
-        <p>{movie ? movie.cast : "LOADING"}</p>
-        <strong>Origin</strong>
-        <p>{movie ? movie.origin : "LOADING"}</p>
-        <a href={movie ? movie.wiki : "LOADING"}>
-          Learn More by visiting the Wikipedia Page
-        </a> */}
       </div>
     );
   };
@@ -113,8 +156,8 @@ export default function MovieModal(props) {
       return "Create New Movie Entry";
     } else if (editing) {
       return "Editing Movie Details";
-    } else if (movie) {
-      return movie.title;
+    } else if (movieId) {
+      return title;
     } else {
       return "Modal Title";
     }
@@ -134,7 +177,7 @@ export default function MovieModal(props) {
           </div>
         ) : (
           <div>
-            <Button onClick={() => setEditing(false)}>Cancel</Button>
+            <Button onClick={handleCancel}>Cancel</Button>
             <Button positive onClick={handleSave}>
               Save
             </Button>
