@@ -5,7 +5,7 @@ export default function MovieTable () {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-      fetch("/movies")
+      fetch("/movies?page=1")
         .then((res) => res.json())
         .then((data) => {
           setMovies(data.content);

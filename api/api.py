@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import sqlite3
 import uuid
 from werkzeug.exceptions import HTTPException
@@ -93,11 +93,20 @@ def get_movie_by_id(movie_id):
             )
 
         return {'content': formatted}
+
+
     else:
         con = sqlite3.connect('movies.db')
         cur = con.cursor()
+        
 
-        cur.execute("SELECT id, release_year, title, origin, director, genre FROM movies;")
+        pagenumber = request.args.get('page')
+        print(pagenumber)
+        if pagenumber != None:
+            cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id LIMIT 25 OFFSET {str((int(pagenumber)-1)*25)};')
+        else:
+            cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id;')
+            
 
         data = cur.fetchall()
         
