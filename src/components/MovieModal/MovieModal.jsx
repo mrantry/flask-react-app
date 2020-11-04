@@ -191,6 +191,15 @@ export default function MovieModal(props) {
             label="Wiki URL"
           />
         </Form>
+        {!newMovie && (
+          <Button
+            onClick={handleDelete}
+            color="red"
+            style={{ marginTop: "24px" }}
+          >
+            Delete Entry
+          </Button>
+        )}
       </div>
     );
   };
@@ -222,7 +231,6 @@ export default function MovieModal(props) {
         ) : (
           <div>
             <Button onClick={handleCancel}>Cancel</Button>
-            {!newMovie && <Button onClick={handleDelete}>DELETE</Button>}
             <Button positive onClick={handleSave}>
               Save
             </Button>
