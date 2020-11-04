@@ -245,6 +245,22 @@ def update_movie(movie_id):
 
 @app.route('/movies/<movie_id>', methods=['DELETE'])
 def delete_movie(movie_id):
+
+    body = request.get_json()
+
+    try:
+        con = sqlite3.connect("movies.db")
+        cur = con.cursor()
+
+        cur.execute(f'DELETE FROM movies where ID=\'{movie_id}\'')
+        
+        con.commit()
+        con.close()
+
+        return f'deleted movie with id: {movie_id}', 200
+
+    except Exception as e:
+        return f'error creating movie: {e}'
     return f'Deleteing movie with id: {movie_id}'
 
 

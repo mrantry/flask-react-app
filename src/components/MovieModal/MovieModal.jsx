@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Label, Modal } from "semantic-ui-react";
 
 export default function MovieModal(props) {
-  const { movieId, modalOpen, handleModalClose, newMovie } = props;
+  const {
+    movieId,
+    modalOpen,
+    handleModalClose,
+    newMovie,
+    handleMovieDelete,
+  } = props;
 
   const [editing, setEditing] = useState(false);
 
@@ -15,7 +21,7 @@ export default function MovieModal(props) {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    if (!newMovie) {
+    if (!newMovie && movieId) {
       fetch(`/movies/${movieId}`)
         .then((res) => res.json())
         .then((data) => {
@@ -115,6 +121,20 @@ export default function MovieModal(props) {
     }
   };
 
+  const handleDelete = () => {
+    fetch(`/movies/${movieId}`, { method: "DELETE" }).then((data) => {
+      setTitle("");
+      setPlot("");
+      setDirector("");
+      setGenre("");
+      setCast("");
+      setOrigin("");
+      setWikiUrl("");
+      handleModalClose();
+      handleMovieDelete(movieId);
+    });
+  };
+
   const display = () => {
     return (
       <div>
@@ -202,6 +222,7 @@ export default function MovieModal(props) {
         ) : (
           <div>
             <Button onClick={handleCancel}>Cancel</Button>
+            {!newMovie && <Button onClick={handleDelete}>DELETE</Button>}
             <Button positive onClick={handleSave}>
               Save
             </Button>

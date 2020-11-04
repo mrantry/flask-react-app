@@ -68,6 +68,11 @@ export default function MovieTable() {
     setModalOpen(true);
   };
 
+  const handleMovieDelete = (movie_id) => {
+    const filtered = movies.filter((m) => m.id !== movie_id);
+    setMovies(filtered);
+  };
+
   return (
     <div>
       <MovieModal
@@ -79,6 +84,7 @@ export default function MovieTable() {
             : "313f4ada-1e23-11eb-936b-3af9d3dd7046"
         }
         newMovie={newMovie}
+        handleMovieDelete={handleMovieDelete}
       />
       <h1
         style={{
