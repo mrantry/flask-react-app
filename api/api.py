@@ -182,8 +182,6 @@ def update_movie(movie_id):
             movie_id
         ]
 
-        print(new_movie)
-
         sql = """
         UPDATE movies
         SET release_year = ? ,
@@ -205,6 +203,10 @@ def update_movie(movie_id):
     except Exception as e:
         return f'error creating movie: {e}'
 
+
+@app.route('/movies/<movie_id>', methods=['DELETE'])
+def delete_movie(movie_id):
+    return f'Deleteing movie with id: {movie_id}'
 
 @app.errorhandler(HTTPException)
 def handle_bad_request(e):
