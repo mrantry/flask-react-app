@@ -139,6 +139,8 @@ def create_movie():
 
         movie_id = str(uuid.uuid1())
 
+        print("body", body)
+
         new_movie = [
             movie_id, 
             body["releaseYear"],
@@ -150,6 +152,7 @@ def create_movie():
             body["wiki"],
             body["plot"]
         ]
+        print("!!!!!!!")
         cur.execute("INSERT INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", new_movie)
         cur.execute(f'SELECT * FROM movies where ID=\'{movie_id}\'')
         data = cur.fetchall()
@@ -174,9 +177,11 @@ def create_movie():
                }
             )
 
+        print(formatted)
+
         return {'content': formatted}, 200
     except Exception as e:
-        return f'error creating movie: {e}'
+        return f'error creating movie: {e}', 500
 
 
 
@@ -307,7 +312,3 @@ def handle_bad_request(e):
     })
     response.content_type = "application/json"
     return response
-
-if __name__ == "__main__()":
-    init_db()
-    populate_db()

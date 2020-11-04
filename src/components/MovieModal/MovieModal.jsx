@@ -8,6 +8,7 @@ export default function MovieModal(props) {
     handleModalClose,
     newMovie,
     handleMovieDelete,
+    setNewMovie,
   } = props;
 
   const [editing, setEditing] = useState(false);
@@ -21,6 +22,7 @@ export default function MovieModal(props) {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
+    debugger;
     if (!newMovie && movieId) {
       fetch(`/movies/${movieId}`)
         .then((res) => res.json())
@@ -83,7 +85,11 @@ export default function MovieModal(props) {
       wiki: wikiUrl,
     };
     if (newMovie) {
-      fetch(`/movies`, { method: "POST", body: movieDataToBeSent })
+      fetch(`/movies`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(movieDataToBeSent),
+      })
         .then((res) => res.json())
         .then((data) => {
           const movie_data = data.content[0];
@@ -94,6 +100,7 @@ export default function MovieModal(props) {
           setCast(movie_data.cast);
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
+          setNewMovie(false);
         });
     } else {
       fetch(`/movies/${movieId}`, { method: "PUT", body: movieDataToBeSent })
@@ -130,8 +137,8 @@ export default function MovieModal(props) {
       setCast("");
       setOrigin("");
       setWikiUrl("");
-      handleModalClose();
       handleMovieDelete(movieId);
+      handleModalClose();
     });
   };
 
@@ -205,11 +212,9 @@ export default function MovieModal(props) {
   };
 
   const getModalTitle = () => {
-    if (editing && newMovie) {
-      return "Create New Movie Entry";
-    } else if (editing) {
-      return "Editing Movie Details";
-    } else if (movieId) {
+    if (editing) {
+      return "Add/Edit Movie Entry";
+    } else if (title) {
       return title;
     } else {
       return "Modal Title";
