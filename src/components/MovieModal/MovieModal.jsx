@@ -18,20 +18,20 @@ export default function MovieModal (props) {
         <Modal
             open={true}
         >
-            <Modal.Header>{movie ? movie.title : "TITLE GOES HERE"}</Modal.Header>
+            <Modal.Header>{movie ? movie.title : "LOADING"}</Modal.Header>
             <Modal.Content>
                 <div>
                     <strong>Plot</strong>
-                    <p>{movie ? movie.plot : "DATA GOES HERE"}</p>
+                    <p>{movie ? movie.plot : "LOADING"}</p>
                     <strong>Director</strong>
-                    <p>{movie ? movie.director : "DATA GOES HERE"}</p>
+                    <p>{movie ? movie.director : "LOADING"}</p>
                     <strong>Genre</strong>
-                    <p>{movie ? movie.genre : "DATA GOES HERE"}</p>
+                    <p>{movie ? movie.genre : "LOADING"}</p>
                     <strong>Cast</strong>
-                    <p>{movie ? movie.cast : "DATA GOES HERE"}</p>
+                    <p>{movie ? movie.cast : "LOADING"}</p>
                     <strong>Origin</strong>
-                    <p>{movie ? movie.origin : "DATA GOES HERE"}</p>
-                    <a href={movie ? movie.wiki : "DATA GOES HERE"}>Learn More by visiting the Wikipedia Page</a>
+                    <p>{movie ? movie.origin : "LOADING"}</p>
+                    <a href={movie ? movie.wiki : "LOADING"}>Learn More by visiting the Wikipedia Page</a>
 
                 </div>
             </Modal.Content>

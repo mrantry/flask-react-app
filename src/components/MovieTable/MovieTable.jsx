@@ -20,6 +20,7 @@ export default function MovieTable () {
         .then((res) => res.json())
         .then((data) => {
           setMovies([...movies, ...data.content]);
+          setPage(data.page)
         });
     }
 
