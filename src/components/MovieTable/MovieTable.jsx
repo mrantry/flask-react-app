@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {Table} from 'semantic-ui-react'
+import {Table, Visibility} from 'semantic-ui-react'
 
 export default function MovieTable () {
     const [movies, setMovies] = useState([]);
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
       fetch("/movies?page=1")
@@ -11,6 +12,14 @@ export default function MovieTable () {
           setMovies(data.content);
         });
     }, []);
+
+    const handleInfiniteScroll = () => {
+        fetch(`/movies?page=${page+1}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setMovies([...movies, ...data.content]);
+        });
+    }
 
     const moviecard = (movie) => {
         return (
@@ -25,17 +34,19 @@ export default function MovieTable () {
     }
 
     return (
-        <Table celled>
-            <Table.Header>
-                <Table.HeaderCell>Title</Table.HeaderCell>
-                <Table.HeaderCell>Genre</Table.HeaderCell>
-                <Table.HeaderCell>Release Year</Table.HeaderCell>
-                <Table.HeaderCell>Director</Table.HeaderCell>
-                <Table.HeaderCell>Origin</Table.HeaderCell>
-            </Table.Header>
-            <Table.Body>
-                {movies.map(m => moviecard(m))}
-            </Table.Body>
-        </Table>
+        <Visibility onBottomVisible={handleInfiniteScroll} once={false}>
+            <Table celled>
+                <Table.Header>
+                    <Table.HeaderCell>Title</Table.HeaderCell>
+                    <Table.HeaderCell>Genre</Table.HeaderCell>
+                    <Table.HeaderCell>Release Year</Table.HeaderCell>
+                    <Table.HeaderCell>Director</Table.HeaderCell>
+                    <Table.HeaderCell>Origin</Table.HeaderCell>
+                </Table.Header>
+                <Table.Body>
+                    {movies.map(m => moviecard(m))}
+                </Table.Body>
+            </Table>
+        </Visibility>
     )
 }

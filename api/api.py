@@ -103,7 +103,7 @@ def get_movie_by_id(movie_id):
         pagenumber = request.args.get('page')
         print(pagenumber)
         if pagenumber != None:
-            cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id LIMIT 25 OFFSET {str((int(pagenumber)-1)*25)};')
+            cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id LIMIT 50 OFFSET {str((int(pagenumber)-1)*50)};')
         else:
             cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id;')
             
