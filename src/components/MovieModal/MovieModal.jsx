@@ -9,10 +9,9 @@ export default function MovieModal (props) {
         fetch(`/movies/${movieId}`)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data.content)
                 setMovie(data.content[0]);
             });
-    }, []);
+    }, [movieId]);
     
     return (
         <Modal
