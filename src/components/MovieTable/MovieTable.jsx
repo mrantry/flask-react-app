@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {Table, Visibility} from 'semantic-ui-react'
+import MovieModal from '../MovieModal/MovieModal';
 
 export default function MovieTable () {
     const [movies, setMovies] = useState([]);
+    const [selectedMovie, setSelectedMovie] = useState()
     const [page, setPage] = useState(1)
 
     useEffect(() => {
@@ -21,9 +23,13 @@ export default function MovieTable () {
         });
     }
 
-    const moviecard = (movie) => {
+    const handleMovieSelection = (movie) => {
+        setSelectedMovie(movie)
+    }
+
+    const moviecard = (movie, index) => {
         return (
-            <Table.Row>
+            <Table.Row key={`movie_${index}`}>
                 <Table.Cell>{movie.title}</Table.Cell>
                 <Table.Cell>{movie.genre}</Table.Cell>
                 <Table.Cell>{movie.release_year}</Table.Cell>
@@ -35,6 +41,7 @@ export default function MovieTable () {
 
     return (
         <Visibility onBottomVisible={handleInfiniteScroll} once={false}>
+            <MovieModal movieId={selectedMovie ? selectedMovie.id : "313f4ada-1e23-11eb-936b-3af9d3dd7046"}/>
             <Table celled>
                 <Table.Header>
                     <Table.HeaderCell>Title</Table.HeaderCell>
@@ -44,7 +51,7 @@ export default function MovieTable () {
                     <Table.HeaderCell>Origin</Table.HeaderCell>
                 </Table.Header>
                 <Table.Body>
-                    {movies.map(m => moviecard(m))}
+                    {movies.map((m, i) => moviecard(m, i))}
                 </Table.Body>
             </Table>
         </Visibility>
