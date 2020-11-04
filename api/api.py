@@ -219,7 +219,7 @@ def update_movie(movie_id):
             )
 
         return {'content': formatted}, 200
-        
+
     except Exception as e:
         return f'error creating movie: {e}'
 
@@ -227,6 +227,11 @@ def update_movie(movie_id):
 @app.route('/movies/<movie_id>', methods=['DELETE'])
 def delete_movie(movie_id):
     return f'Deleteing movie with id: {movie_id}'
+
+
+@app.route('/search/<search_string>', methods=['GET'])
+def search(search_string):
+    return f'searching for movie with string: {search_string}'
 
 @app.errorhandler(HTTPException)
 def handle_bad_request(e):
