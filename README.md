@@ -24,7 +24,7 @@ Navigate to the root directory and start the service
 yarn start-api
 ```
 
-If this is the first time starting the application, you will need to initialize and popuate the database by calling the endpoints `/initdb` and `/populatedb`. You can do this with any http client.
+If this is the first time starting the application, you may want to initialize and popuate the database by calling the endpoints `/initdb` and `/populatedb`. You can do this with any http client. If you're not interested in that, feel free to skip this step. If I've uploaded the sqlite file correctly, this should not be a problem.
 
 You are then ready to run the app
 
@@ -53,7 +53,7 @@ This will start a flask api at [http://localhost:5000](http://localhost:5000)
 ### `yarn test`
 
 Launches the test runner in the interactive watch mode.\
-There are no relevant tests for this application
+There are no relevant tests for this application. This is regretable.
 
 # NOTES FOR BALTO
 
@@ -72,3 +72,4 @@ There are no relevant tests for this application
   - everything dealing with `movies` could be in one route with modularized function calls
   - break things into seperate files
 - Pagination with infinite scroll?
+- Automated tests :(
