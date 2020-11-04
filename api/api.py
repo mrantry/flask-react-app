@@ -101,7 +101,7 @@ def get_movie_by_id(movie_id):
         
 
         pagenumber = request.args.get('page')
-        print(pagenumber)
+
         if pagenumber != None:
             cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies ORDER BY id LIMIT 50 OFFSET {str((int(pagenumber)-1)*50)};')
         else:
@@ -266,7 +266,37 @@ def delete_movie(movie_id):
 
 @app.route('/search/<search_string>', methods=['GET'])
 def search(search_string):
-    return f'searching for movie with string: {search_string}'
+    try:
+        con = sqlite3.connect("movies.db")
+        cur = con.cursor()
+
+        pagenumber = request.args.get('page')
+
+        cur.execute(f'SELECT id, release_year, title, origin, director, genre FROM movies WHERE title LIKE \'{search_string}%\' ORDER BY id LIMIT 50 OFFSET {str((int(pagenumber)-1)*50)};')
+        
+        data = cur.fetchall()
+
+        con.commit()
+        con.close()
+        formatted = []
+        for item in data:
+            formatted.append(
+                {
+                    "id": item[0],
+                    "release_year": item[1],
+                    "title": item[2],
+                    "origin": item[3],
+                    "director": item[4],
+                    "genre": item[5]
+
+               }
+            )
+
+        return {'content': formatted, "page": pagenumber}
+
+
+    except Exception as e:
+        return f'error creating movie: {e}'
 
 @app.errorhandler(HTTPException)
 def handle_bad_request(e):
@@ -279,3 +309,7 @@ def handle_bad_request(e):
     })
     response.content_type = "application/json"
     return response
+
+if __name__ == "__main__()":
+    init_db()
+    populate_db()
