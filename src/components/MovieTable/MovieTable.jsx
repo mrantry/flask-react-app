@@ -9,12 +9,16 @@ import {
 } from "semantic-ui-react";
 import MovieModal from "../MovieModal/MovieModal";
 
+// TODO: Break out parts that aren't actually the table...
+
 export default function MovieTable() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState();
   const [page, setPage] = useState(1);
 
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [newMovie, setNewMovie] = useState(false);
 
   useEffect(() => {
     fetch("/movies?page=1")
@@ -41,6 +45,7 @@ export default function MovieTable() {
   const handleModalClose = () => {
     setModalOpen(false);
     setSelectedMovie(undefined);
+    setNewMovie(false);
   };
 
   const moviecard = (movie, index) => {
@@ -58,6 +63,11 @@ export default function MovieTable() {
     );
   };
 
+  const handleAddMovie = () => {
+    setNewMovie(true);
+    setModalOpen(true);
+  };
+
   return (
     <div>
       <MovieModal
@@ -68,6 +78,7 @@ export default function MovieTable() {
             ? selectedMovie.id
             : "313f4ada-1e23-11eb-936b-3af9d3dd7046"
         }
+        newMovie={newMovie}
       />
       <h1
         style={{
@@ -85,8 +96,10 @@ export default function MovieTable() {
           margin: "20px",
         }}
       >
-        <Button positive>Add Movie</Button>
-        <Search />
+        <Button onClick={handleAddMovie} positive>
+          Add Movie
+        </Button>
+        <Search placeholder="search by title..." />
       </Header>
       <Visibility onBottomVisible={handleInfiniteScroll} once={false}>
         <Card style={{ margin: "0 20px 100px 20px", width: "99%" }}>

@@ -28,8 +28,21 @@ export default function MovieModal(props) {
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
         });
+    } else {
+      setTitle("");
+      setPlot("");
+      setDirector("");
+      setGenre("");
+      setCast("");
+      setOrigin("");
+      setWikiUrl("");
+      setEditing(true);
     }
-  }, [movieId]);
+
+    return () => {
+      setEditing(false);
+    };
+  }, [movieId, modalOpen]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -64,7 +77,18 @@ export default function MovieModal(props) {
       wiki: wikiUrl,
     };
     if (newMovie) {
-      console.log("sent request to create a movie");
+      fetch(`/movies`, { method: "POST", body: movieDataToBeSent })
+        .then((res) => res.json())
+        .then((data) => {
+          const movie_data = data.content[0];
+          setTitle(movie_data.title);
+          setPlot(movie_data.plot);
+          setDirector(movie_data.director);
+          setGenre(movie_data.genre);
+          setCast(movie_data.cast);
+          setOrigin(movie_data.origin);
+          setWikiUrl(movie_data.wiki);
+        });
     } else {
       fetch(`/movies/${movieId}`, { method: "PUT", body: movieDataToBeSent })
         .then((res) => res.json())
@@ -132,7 +156,7 @@ export default function MovieModal(props) {
           />
           <Form.Input
             value={genre}
-            onChange={handleDirectorChange}
+            onChange={handleGenreChange}
             label="Genre"
           />
           <Form.Input value={cast} onChange={handleCastChange} label="Cast" />
