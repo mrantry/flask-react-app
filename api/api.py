@@ -126,7 +126,7 @@ def get_movie_by_id(movie_id):
                }
             )
 
-        return {'content': formatted}
+        return {'content': formatted, "page": pagenumber}
         
 @app.route('/movies', methods=['POST'])
 def create_movie():
