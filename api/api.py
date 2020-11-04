@@ -139,8 +139,6 @@ def create_movie():
 
         movie_id = str(uuid.uuid1())
 
-        print("body", body)
-
         new_movie = [
             movie_id, 
             body["releaseYear"],
@@ -152,7 +150,6 @@ def create_movie():
             body["wiki"],
             body["plot"]
         ]
-        print("!!!!!!!")
         cur.execute("INSERT INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", new_movie)
         cur.execute(f'SELECT * FROM movies where ID=\'{movie_id}\'')
         data = cur.fetchall()

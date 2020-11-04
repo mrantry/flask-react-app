@@ -5,10 +5,7 @@ import {
   Visibility,
   Button,
   Input,
-  Card,
   Loader,
-  Dimmer,
-  Segment,
 } from "semantic-ui-react";
 import MovieModal from "../MovieModal/MovieModal";
 
@@ -22,6 +19,7 @@ export default function MovieTable() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [newMovie, setNewMovie] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     fetch("/movies?page=1")
@@ -32,12 +30,14 @@ export default function MovieTable() {
   }, []);
 
   const handleInfiniteScroll = () => {
-    fetch(`/movies?page=${parseInt(page) + 1}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies([...movies, ...data.content]);
-        setPage(data.page);
-      });
+    if (!searching) {
+      fetch(`/movies?page=${parseInt(page) + 1}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setMovies([...movies, ...data.content]);
+          setPage(data.page);
+        });
+    }
   };
 
   const handleMovieSelection = (movie) => {
@@ -79,6 +79,9 @@ export default function MovieTable() {
 
   const handleSearchChange = (e) => {
     setLoading(true);
+    if (e.target.value !== "") {
+      setSearching(true);
+    }
     if (e.target.value === "") {
       fetch("/movies?page=1")
         .then((res) => res.json())
@@ -128,7 +131,6 @@ export default function MovieTable() {
         <Loader active={loading} inline />
         <Input placeholder="search by title..." onChange={handleSearchChange} />
       </Header>
-      {/* <Card style={{ margin: "0 20px 100px 20px", width: "99%" }}> */}
       <Visibility onBottomVisible={handleInfiniteScroll} once={false}>
         <Table style={{ margin: "0 20px 100px 20px", width: "98.5%" }} celled>
           <Table.Header>
@@ -141,7 +143,6 @@ export default function MovieTable() {
           <Table.Body>{movies.map((m, i) => moviecard(m, i))}</Table.Body>
         </Table>
       </Visibility>
-      {/* </Card> */}
     </div>
   );
 }

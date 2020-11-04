@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Label, Modal } from "semantic-ui-react";
+import { Button, Form, Modal } from "semantic-ui-react";
 
 export default function MovieModal(props) {
   const {
@@ -20,9 +20,9 @@ export default function MovieModal(props) {
   const [origin, setOrigin] = useState("");
   const [wikiUrl, setWikiUrl] = useState("");
   const [title, setTitle] = useState("");
+  const [releaseYear, setReleaseYear] = useState("");
 
   useEffect(() => {
-    debugger;
     if (!newMovie && movieId) {
       fetch(`/movies/${movieId}`)
         .then((res) => res.json())
@@ -34,10 +34,12 @@ export default function MovieModal(props) {
           setGenre(movie_data.genre);
           setCast(movie_data.cast);
           setOrigin(movie_data.origin);
+          setReleaseYear(movie_data.release_year);
           setWikiUrl(movie_data.wiki);
         });
     } else {
       setTitle("");
+      setReleaseYear("");
       setPlot("");
       setDirector("");
       setGenre("");
@@ -50,7 +52,7 @@ export default function MovieModal(props) {
     return () => {
       setEditing(false);
     };
-  }, [movieId, modalOpen]);
+  }, [newMovie, movieId, modalOpen]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -70,6 +72,9 @@ export default function MovieModal(props) {
   const handleOriginChange = (e) => {
     setOrigin(e.target.value);
   };
+  const handleReleaseYearChange = (e) => {
+    setReleaseYear(e.target.value);
+  };
   const handleWikiUrlChange = (e) => {
     setWikiUrl(e.target.value);
   };
@@ -83,6 +88,7 @@ export default function MovieModal(props) {
       origin,
       cast,
       wiki: wikiUrl,
+      releaseYear,
     };
     if (newMovie) {
       fetch(`/movies`, {
@@ -103,7 +109,11 @@ export default function MovieModal(props) {
           setNewMovie(false);
         });
     } else {
-      fetch(`/movies/${movieId}`, { method: "PUT", body: movieDataToBeSent })
+      fetch(`/movies/${movieId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(movieDataToBeSent),
+      })
         .then((res) => res.json())
         .then((data) => {
           const movie_data = data.content[0];
@@ -114,6 +124,7 @@ export default function MovieModal(props) {
           setCast(movie_data.cast);
           setOrigin(movie_data.origin);
           setWikiUrl(movie_data.wiki);
+          setReleaseYear(movie_data.release_year);
         });
     }
     setEditing(false);
@@ -137,6 +148,7 @@ export default function MovieModal(props) {
       setCast("");
       setOrigin("");
       setWikiUrl("");
+      setReleaseYear("");
       handleMovieDelete(movieId);
       handleModalClose();
     });
@@ -145,6 +157,8 @@ export default function MovieModal(props) {
   const display = () => {
     return (
       <div>
+        <strong>Release Year</strong>
+        <p>{releaseYear ? releaseYear : "NO DATA"}</p>
         <strong>Plot</strong>
         <p>{plot ? plot : "NO DATA"}</p>
         <strong>Director</strong>
@@ -170,6 +184,11 @@ export default function MovieModal(props) {
             value={title}
             onChange={handleTitleChange}
             label="Title"
+          />
+          <Form.Input
+            value={releaseYear}
+            onChange={handleReleaseYearChange}
+            label="Release Year"
           />
           <Form.TextArea
             value={plot}
