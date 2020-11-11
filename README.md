@@ -1,5 +1,7 @@
 # Balto Programming Challenge
 
+This is an example react + flask + sqlite application. It was bootstrapped in 24 hours and is **not** supported in any way.
+Feel free to clone this project to play around with the code.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Quickstart Guide
@@ -55,9 +57,7 @@ This will start a flask api at [http://localhost:5000](http://localhost:5000)
 Launches the test runner in the interactive watch mode.\
 There are no relevant tests for this application. This is regretable.
 
-# NOTES FOR BALTO
-
-## Things I would improve
+## Wishlist
 
 - Use something like SQLAlchemy, not the basic sqlite engine in python
   - open to SQL injection
