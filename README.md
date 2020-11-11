@@ -1,4 +1,4 @@
-# Balto Programming Challenge
+# Generic React + Flask + SQLite Application
 
 This is an example react + flask + sqlite application. It was bootstrapped in 24 hours and is **not** supported in any way.
 Feel free to clone this project to play around with the code.
